@@ -1,0 +1,22 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+imports:
+  - http://www.getcloudify.org/spec/cloudify/4.2/types.yaml
+  - plugin.yaml
+
+node_templates:
+
+  TestA:
+    type: cloudify.nodes.Root
+
+  Polling:
+    type: cloudify.nodes.AttributePoller
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: TestA
+
+  TestB:
+    type: cloudify.nodes.Root
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: Polling

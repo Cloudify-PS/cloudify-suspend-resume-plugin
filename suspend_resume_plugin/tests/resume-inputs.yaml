@@ -1,0 +1,5 @@
+#cfy executions start -d tests -p test-inputs.yaml execute_operation --allow-custom-parameters
+operation: 'test.resume'
+runtime_property: A_STATUS
+node_ids: [ Polling ]
+  
