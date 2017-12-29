@@ -1,0 +1,19 @@
+plugins:
+  suspend_resume_plugin:
+    executor: central_deployment_agent
+    package_name: cloudify-suspend-resume-plugin
+    package_version: '1.0'
+
+node_types:
+
+  cloudify.nodes.AttributePoller:
+    derived_from: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: suspend_resume_plugin.suspend_resume_plugin.tasks.suspend
+          inputs:
+            runtime_property:
+              default: 'STATUS'
+            retry_interval:
+              default: 5
