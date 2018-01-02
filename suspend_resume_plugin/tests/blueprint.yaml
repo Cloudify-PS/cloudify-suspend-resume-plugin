@@ -11,6 +11,8 @@ node_templates:
 
   Polling:
     type: cloudify.nodes.AttributePoller
+    properties:
+      description: 'Waiting for manual operation'
     relationships:
       - type: cloudify.relationships.depends_on
         target: TestA
