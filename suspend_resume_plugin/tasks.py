@@ -14,20 +14,19 @@ def suspend(ctx,
             retry_interval,
             **kwargs):
     """
-    Active polling on the runtime property
-    :parameter: retry_interval in seconds
+    Active polling on the runtime property.
+
+    We avoid maintaining a reference to "ctx.instance.runtime_properties".
+    Instead, we explicitly refer to "ctx.instance.runtime_properties" every time,
+    otherwise errors may occur concerning runtime properties' update conflicts.
     """
 
-    runtime_props = ctx.instance.runtime_properties
-
-    runtime_props[WAITING] = True
-    ctx.logger.debug('Runtime properties: {}'
-                     .format(str(runtime_props)))
+    ctx.instance.runtime_properties[WAITING] = True
 
     runtime_property = ctx.node.properties[RUNTIME_PROPERTY]
-    value = runtime_props.get(runtime_property)
+    value = ctx.instance.runtime_properties.get(runtime_property)
     if value:
-        runtime_props[WAITING] = False
+        ctx.instance.runtime_properties[WAITING] = False
         if value == Values.OK:
             ctx.logger.info("Polling received OK status. Operation succeeded.")
             return
@@ -36,11 +35,10 @@ def suspend(ctx,
                                       "Operation failed.")
         raise NonRecoverableError("Unknown status '{}'. Operation failed."
                                   .format(value))
-    else:
-        msg = "No status received. " \
-              "Retrying polling after {} seconds.".format(retry_interval)
-        ctx.operation.retry(message=msg,
-                            retry_after=retry_interval)
+
+    ctx.operation.retry("No status received. Will retry in {} second(s)."
+                        .format(retry_interval),
+                        retry_after=retry_interval)
 
 
 def clear(ctx, **kwargs):
