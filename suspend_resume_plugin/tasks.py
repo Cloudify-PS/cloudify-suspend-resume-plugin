@@ -4,12 +4,14 @@ from cloudify.exceptions import NonRecoverableError
 class Values(object):
     OK = 'OK'
     FAILED = 'FAILED'
+    SKIPPED = 'SKIPPED'
 
 WAITING = 'WAITING'
 
+RUNTIME_PROPERTY = 'runtime_property'
+
 
 def suspend(ctx,
-            runtime_property,
             retry_interval,
             **kwargs):
     """
@@ -21,11 +23,15 @@ def suspend(ctx,
 
     runtime_props[WAITING] = True
     ctx.logger.debug('Runtime properties: {}'
-                    .format(str(runtime_props)))
+                     .format(str(runtime_props)))
 
+    runtime_property = ctx.node.properties[RUNTIME_PROPERTY]
     value = runtime_props.get(runtime_property)
     if value:
         runtime_props[WAITING] = False
+        if value == Values.SKIPPED:
+            ctx.logger.info("Polling received SKIPPED status. Skipping.")
+            return
         if value == Values.OK:
             ctx.logger.info("Polling received OK status. Operation succeeded.")
             return
@@ -42,24 +48,27 @@ def suspend(ctx,
 
 
 def set_value(ctx,
-              runtime_property,
               value,
               **kwargs):
+    runtime_property = ctx.node.properties[RUNTIME_PROPERTY]
     ctx.instance.runtime_properties[runtime_property] = value
     ctx.logger.debug('Runtime properties: {}'
-                    .format(str(ctx.instance.runtime_properties)))
+                     .format(str(ctx.instance.runtime_properties)))
 
 
 def fail(ctx,
-         runtime_property,
          **kwargs):
-    set_value(ctx, runtime_property, Values.FAILED, **kwargs)
+    set_value(ctx, Values.FAILED, **kwargs)
+
+
+def skip(ctx,
+         **kwargs):
+    set_value(ctx, Values.SKIPPED, **kwargs)
 
 
 def resume(ctx,
-           runtime_property,
            **kwargs):
-    set_value(ctx, runtime_property, Values.OK, **kwargs)
+    set_value(ctx, Values.OK, **kwargs)
 
 
 

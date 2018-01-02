@@ -1,0 +1,4 @@
+#cfy executions start -d tests -p skip-inputs.yaml execute_operation --allow-custom-parameters
+operation: 'cloudify.interfaces.suspend_resume.skip'
+node_ids: [ Polling ]
+  

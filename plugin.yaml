@@ -8,12 +8,22 @@ node_types:
 
   cloudify.nodes.AttributePoller:
     derived_from: cloudify.nodes.Root
+    properties:
+      description:
+        default: 'Manual condition status'
+      runtime_property:
+        default: 'STATUS'
     interfaces:
       cloudify.interfaces.lifecycle:
         create:
           implementation: suspend_resume_plugin.suspend_resume_plugin.tasks.suspend
           inputs:
-            runtime_property:
-              default: 'STATUS'
             retry_interval:
               default: 5
+      cloudify.interfaces.suspend_resume:
+        resume:
+          implementation: suspend_resume_plugin.suspend_resume_plugin.tasks.resume
+        skip:
+          implementation: suspend_resume_plugin.suspend_resume_plugin.tasks.skip
+        fail:
+          implementation: suspend_resume_plugin.suspend_resume_plugin.tasks.fail

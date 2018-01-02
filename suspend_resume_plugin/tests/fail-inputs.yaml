@@ -1,5 +1,4 @@
-#cfy executions start -d tests -p test-inputs.yaml execute_operation --allow-custom-parameters
-operation: 'test.fail'
-runtime_property: STATUS
+#cfy executions start -d tests -p fail-inputs.yaml execute_operation --allow-custom-parameters
+operation: 'cloudify.interfaces.suspend_resume.fail'
 node_ids: [ Polling ]
   
