@@ -47,6 +47,12 @@ def suspend(ctx,
                             retry_after=retry_interval)
 
 
+def clear(ctx, **kwargs):
+    ctx.instance.runtime_properties.pop(WAITING, None)
+    runtime_property = ctx.node.properties[RUNTIME_PROPERTY]
+    ctx.instance.runtime_properties.pop(runtime_property, None)
+
+
 def set_value(ctx,
               value,
               **kwargs):
