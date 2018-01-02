@@ -4,7 +4,6 @@ from cloudify.exceptions import NonRecoverableError
 class Values(object):
     OK = 'OK'
     FAILED = 'FAILED'
-    SKIPPED = 'SKIPPED'
 
 WAITING = 'WAITING'
 
@@ -29,9 +28,6 @@ def suspend(ctx,
     value = runtime_props.get(runtime_property)
     if value:
         runtime_props[WAITING] = False
-        if value == Values.SKIPPED:
-            ctx.logger.info("Polling received SKIPPED status. Skipping.")
-            return
         if value == Values.OK:
             ctx.logger.info("Polling received OK status. Operation succeeded.")
             return
@@ -65,11 +61,6 @@ def set_value(ctx,
 def fail(ctx,
          **kwargs):
     set_value(ctx, Values.FAILED, **kwargs)
-
-
-def skip(ctx,
-         **kwargs):
-    set_value(ctx, Values.SKIPPED, **kwargs)
 
 
 def resume(ctx,
