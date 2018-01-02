@@ -5,7 +5,7 @@
 1. Create a ZIP file containing the `widget` directory:
 
    ```bash
-   zip suspend-resume.zip widget/* -x widget/src/
+   cd widgets && zip suspend-resume.zip suspend-resume/* -x suspend-resume/src/
    ```
    
 2. Upload the Widget to the manager.
