@@ -66,7 +66,3 @@ def fail(ctx,
 def resume(ctx,
            **kwargs):
     set_value(ctx, Values.OK, **kwargs)
-
-
-
-
