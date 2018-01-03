@@ -19,6 +19,7 @@ Stage.defineWidget({
   categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 
   initialConfiguration: [
+    Stage.GenericConfig.POLLING_TIME_CONFIG(5),
     { id: 'deploymentId', name: 'Deployment Id', default: 'suspend-resume', type: Stage.Basic.GenericField.STRING },
     { id: 'nodeType', name: 'node Type', default: 'cloudify.nodes.AttributePoller', type: Stage.Basic.GenericField.STRING },
   ],

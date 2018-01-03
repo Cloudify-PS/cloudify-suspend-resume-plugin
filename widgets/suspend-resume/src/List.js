@@ -47,6 +47,7 @@ export default class List extends React.Component {
 
     let { description, runtime_property } = this.props.node.properties;
     let value = this.props.nodeInstance.runtime_properties[runtime_property];
+    let notWaiting = !this.props.nodeInstance.runtime_properties['WAITING'];
 
     return <Grid celled='internally'>
       <Grid.Row>
@@ -57,12 +58,12 @@ export default class List extends React.Component {
           {
             this.state.loading 
             ? <Stage.Basic.Loading /> 
-            : <div>{runtime_property} : {value}</div>
+            : <div>{runtime_property} : {value?value:'Pending'}</div>
           }
         </Grid.Column>
         <Grid.Column width={5}>
-          <Button size="tiny" color="green" onClick={this.triggerActions.bind(this, 'OK')}>Proceed</Button>
-          <Button size="tiny" color="red" onClick={this.triggerActions.bind(this, 'FAILED')}>Fail</Button>
+          <Button size="tiny" color="green" onClick={this.triggerActions.bind(this, 'OK')} disabled={notWaiting}>Proceed</Button>
+          <Button size="tiny" color="red" onClick={this.triggerActions.bind(this, 'FAILED')} disabled={notWaiting}>Fail</Button>
         </Grid.Column>
       </Grid.Row>
     </Grid>;
